@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="tg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rental Pro</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#080808;
+    color:#eee;
+    font:14px Arial;
+}
+
+.side{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:255px;
+    background:#0d0d0d;
+    border-right:1px solid #292929;
+    padding:15px;
+    overflow:auto;
+}
+
+.brand{
+    font-size:20px;
+    font-weight:bold;
+    padding:10px;
+    border-bottom:1px solid #292929;
+    margin-bottom:12px;
+}
+
+.nav{
+    width:100%;
+    text-align:left;
+    padding:11px;
+    margin:4px 0;
+    background:transparent;
+    color:#bbb;
+    border:1px solid transparent;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.nav:hover,
+.nav.on{
+    background:#e50914;
+    color:white;
+    border-color:#ff3038;
+}
+
+.main{
+    margin-left:255px;
+    padding:20px;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid #e50914;
+    padding-bottom:14px;
+    margin-bottom:18px;
+}
+
+.page{
+    display:none;
+}
+
+.page.on{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.two{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.card{
+    background:#121212;
+    border:1px solid #292929;
+    border-radius:13px;
+    padding:16px;
+    margin-bottom:14px;
+}
+
+.stat{
+    border-left:3px solid #e50914;
+}
+
+.big{
+    font-size:25px;
+    font-weight:bold;
+    margin:8px 0;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    background:#090909;
+    color:white;
+    border:1px solid #333;
+    border-radius:8px;
+    padding:10px;
+}
+
+textarea{
+    min-height:80px;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+label{
+    display:block;
+    color:#999;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.btn{
+    padding:10px 14px;
+    border-radius:9px;
+    border:1px solid #333;
+    background:#191919;
+    color:#fff;
+    cursor:pointer;
+}
+
+.btn:hover,
+.red{
+    background:#e50914;
+    border-color:#e50914;
+}
+
+.table{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:9px;
+    border-bottom:1px solid #292929;
+    text-align:left;
+    white-space:nowrap;
+}
+
+.pipe{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+}
+
+.pbox{
+    background:#0d0d0d;
+    border:1px solid #292929;
+    border-radius:10px;
+    padding:10px;
+}
+
+.muted{
+    color:#888;
+}
+
+.row{
+    background:#0d0d0d;
+    border:1px solid #292929;
+    border-radius:9px;
+    padding:10px;
+    margin:7px 0;
+}
+
+.danger{
+    color:#ff626a;
+}
+
+.ok{
+    color:#24c77a;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000b;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal>div{
+    background:#111;
+    border:1px solid #444;
+    border-radius:13px;
+    padding:18px;
+    width:min(850px,100%);
+    max-height:90vh;
+    overflow:auto;
+}
+
+.x{
+    float:right;
+    background:#222;
+    color:white;
+    border:0;
+    padding:7px;
+    border-radius:7px;
+}
+
+.mobile{
+    display:none;
+}
+
+@media(max-width:800px){
+
+    .side{
+        transform:translateX(-100%);
+        transition:.2s;
+    }
+
+    .side.open{
+        transform:none;
+    }
+
+    .main{
+        margin:0;
+        padding:12px;
+    }
+
+    .grid,
+    .pipe,
+    .two,
+    .form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .mobile{
+        display:block!important;
+    }
+}
+
+@media(max-width:520px){
+
+    .grid,
+    .pipe,
+    .two,
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="side" id="side">
+
+<div class="brand">
+🏗️ Rental Pro
+<br>
+<small class="muted">Construction Rental</small>
+</div>
+
+<div class="muted">АСОСӢ</div>
+
+<button class="nav on" data-p="dash">🏠 Панел</button>
+<button class="nav" data-p="problem">🚨 Problem Center</button>
+<button class="nav" data-p="smart">🧠 Smart / AI</button>
+<button class="nav" data-p="calendar">📅 Calendar</button>
+
+<div class="muted">МУШТАРИЁН</div>
+
+<button class="nav" data-p="customers">👤 Муштариён</button>
+<button class="nav" data-p="history">📜 Таърих</button>
+<button class="nav" data-p="projects">🏗️ Project Rental</button>
+
+<div class="muted">АНБОР</div>
+
+<button class="nav" data-p="inventory">📦 Анбор</button>
+<button class="nav" data-p="pipeadd">🔩 Иловаи труба</button>
+<button class="nav" data-p="lessa">🏗️ Леса</button>
+<button class="nav" data-p="clamp">🔗 Хамут</button>
+<button class="nav" data-p="jack">🔧 Дамкрат</button>
+<button class="nav" data-p="sale">🛒 Фурӯш</button>
+
+<div class="muted">АРЕНДА</div>
+
+<button class="nav" data-p="rent">📝 Аренда</button>
+<button class="nav" data-p="ship">🚚 Борҳо</button>
+<button class="nav" data-p="ret">🔄 Баргардонидан</button>
+<button class="nav" data-p="pay">💰 Пардохтҳо</button>
+<button class="nav" data-p="receipt">🧾 Receipt</button>
+
+<div class="muted">ҲИСОБОТ</div>
+
+<button class="nav" data-p="analytics">📊 Analytics</button>
+<button class="nav" data-p="profit">📈 Profit Center</button>
+<button class="nav" data-p="forecast">📦 Forecast</button>
+<button class="nav" data-p="debt">💳 Қарз</button>
+<button class="nav" data-p="material">🧮 Масолеҳ</button>
+<button class="nav" data-p="settings">⚙️ Танзимот</button>
+
+</aside>
+
+
+<main class="main">
+
+<div class="mobile">
+<button class="btn"
+onclick="document.getElementById('side').classList.toggle('open')">
+☰
+</button>
+</div>
+
+<header class="top">
+
+<div>
+<h2 id="title">Command Center</h2>
+<span class="muted" id="sub">Rental Pro</span>
+</div>
+
+<b>🔴 PRO</b>
+
+</header>
+
+
+<!-- DASHBOARD -->
+
+<section id="dash" class="page on">
+
+<div class="grid">
+
+<div class="card stat">
+👤
+<div class="big" id="sCus">0</div>
+<span class="muted">Муштариён</span>
+</div>
+
+<div class="card stat">
+📦
+<div class="big" id="sStock">0</div>
+<span class="muted">Холӣ</span>
+</div>
+
+<div class="card stat">
+📝
+<div class="big" id="sRent">0</div>
+<span class="muted">Арендаҳои фаъол</span>
+</div>
+
+<div class="card stat">
+💳
+<div class="big" id="sDebt">0</div>
+<span class="muted">Қарз</span>
+</div>
+
+</div>
+
+
+<div class="two">
+
+<div class="card">
+
+<h3>⚡ Амалҳои зуд</h3>
+
+<p>
+
+<button class="btn red"
+onclick="go('customers')">
+👤 Муштарӣ
+</button>
+
+<button class="btn red"
+onclick="go('rent')">
+📝 Аренда
+</button>
+
+<button class="btn red"
+onclick="go('inventory')">
+📦 Анбор
+</button>
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>🚨 Вазъият</h3>
+
+<div id="dashProblems"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CUSTOMERS -->
+
+<section id="customers" class="page">
+
+<div class="card">
+
+<h3>👤 Муштарӣ</h3>
+
+<div class="form">
+
+<div>
+<label>Ном *</label>
+<input id="cn">
+</div>
+
+<div>
+<label>Телефон</label>
+<input id="cp">
+</div>
+
+<div class="full">
+<label>Адрес</label>
+<input id="ca">
+</div>
+
+</div>
+
+<p>
+
+<button class="btn red"
+onclick="addCustomer()">
+➕ Сабт
+</button>
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div id="customersTable"></div>
+
+</div>
+
+</section>
+
+
+<!-- HISTORY -->
+
+<section id="history" class="page">
+
+<div class="card">
+
+<h3>📜 Таърихи муштарӣ</h3>
+
+<select id="hc" onchange="history()"></select>
+
+<div id="historyOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- PROJECT -->
+
+<section id="projects" class="page">
+
+<div class="card">
+
+<h3>🏗️ Project Rental</h3>
+
+<div class="form">
+
+<div>
+<label>Номи объект *</label>
+<input id="pn">
+</div>
+
+<div>
+<label>Адрес</label>
+<input id="pa">
+</div>
+
+<div>
+<label>Масоҳат м²</label>
+<input id="parea" type="number">
+</div>
+
+<div>
+<label>Баландӣ м</label>
+<input id="ph" type="number">
+</div>
+
+</div>
+
+<p>
+
+<button class="btn red"
+onclick="addProject()">
+➕ Илова
+</button>
+
+</p>
+
+</div>
+
+<div class="card" id="projectsOut"></div>
+
+</section>
+
+
+<!-- INVENTORY -->
+
+<section id="inventory" class="page">
+
+<div class="card">
+
+<h3>📦 Анбор</h3>
+
+<div class="grid" id="invSummary"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>🔩 24 андозаи труба</h3>
+
+<div class="pipe" id="pipeGrid"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>🔗 Хамутҳо</h3>
+
+<div id="clampOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- ADD PIPE -->
+
+<section id="pipeadd" class="page">
+
+<div class="card">
+
+<h3>🔩 Иловаи труба</h3>
+
+<div class="table">
+
+<table>
+
+<thead>
+
+<tr>
+<th>✓</th>
+<th>Андоза</th>
+<th>Миқдор</th>
+<th>Нарх/м/рӯз</th>
+</tr>
+
+</thead>
+
+<tbody id="pipeRows"></tbody>
+
+</table>
+
+</div>
+
+
+<p>
+
+<button class="btn red"
+onclick="addPipes()">
+💾 Илова кардан
+</button>
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- LESSA -->
+
+<section id="lessa" class="page">
+
+<div class="card">
+
+<h3>🏗️ Леса</h3>
+
+<div class="form">
+
+<div>
+<label>Миқдор</label>
+<input id="lq" type="number">
+</div>
+
+<div>
+<label>Нарх/дона/рӯз</label>
+<input id="lp" type="number">
+</div>
+
+</div>
+
+<p>
+
+<button class="btn red"
+onclick="addLessa()">
+➕ Илова
+</button>
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- CLAMP -->
+
+<section id="clamp" class="page">
+
+<div class="card">
+
+<h3>🔗 Хамут</h3>
+
+<div class="form">
+
+<div>
+
+<label>Намуд</label>
+
+<select id="ct">
+
+<option>кручӣ</option>
+<option>простой</option>
+<option>соединитель</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>Миқдор</label>
+
+<input id="cq" type="number">
+
+</div>
+
+
+<div>
+
+<label>Нарх/дона/рӯз</label>
+
+<input id="cprice" type="number">
+
+</div>
+
+</div>
+
+
+<p>
+
+<button class="btn red"
+onclick="addClamp()">
+➕ Илова
+</button>
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- JACK -->
+
+<section id="jack" class="page">
+
+<div class="card">
+
+<h3>🔧 Дамкрат</h3>
+
+<div class="form">
+
+<div>
+<label>Миқдор</label>
+<input id="jq" type="number">
+</div>
+
+<div>
+<label>Нарх/дона/рӯз</label>
+<input id="jp" type="number">
+</div>
+
+</div>
+
+<p>
+
+<button class="btn red"
+onclick="addJack()">
+➕ Илова
+</button>
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- SALE -->
+
+<section id="sale" class="page">
+
+<div class="card">
+
+<h3>🛒 Фурӯш</h3>
+
+<div class="form">
+
+<div>
+
+<label>Мол</label>
+
+<select id="saleItem"></select>
+
+</div>
+
+<div>
+
+<label>Миқдор</label>
+
+<input id="saleQty" type="number">
+
+</div>
+
+<div>
+
+<label>Маблағи фурӯш</label>
+
+<input id="saleTotal" type="number">
+
+</div>
+
+<div>
+
+<label>Харидор</label>
+
+<input id="saleBuyer">
+
+</div>
+
+</div>
+
+<p>
+
+<button class="btn red"
+onclick="sale()">
+🛒 Фурӯхтан
+</button>
+
+</p>
+
+</div>
+
+<div class="card" id="salesOut"></div>
+
+</section>
+
+
+<!-- RENT -->
+
+<section id="rent" class="page">
+
+<div class="card">
+
+<h3>📝 Арендаи нав</h3>
+
+<div class="form">
+
+<div>
+
+<label>Муштарӣ</label>
+
+<select id="rc"></select>
+
+</div>
+
+<div>
+
+<label>Объект</label>
+
+<select id="rpj"></select>
+
+</div>
+
+<div>
+
+<label>Оғоз</label>
+
+<input id="rs" type="datetime-local">
+
+</div>
+
+<div>
+
+<label>Нақшаи баргардонӣ</label>
+
+<input id="re" type="datetime-local">
+
+</div>
+
+<div>
+
+<label>Пардохти аввал</label>
+
+<input id="rpaid"
+type="number"
+value="0">
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>📦 Молҳо</h3>
+
+<div id="rentRows"></div>
+
+<button class="btn"
+onclick="rentRow()">
+➕ Мол
+</button>
+
+<p>
+1 рӯз:
+<b id="daily">0</b>
+сомонӣ
+</p>
+
+</div>
+
+
+<button class="btn red"
+onclick="rent()">
+📝 Сабти аренда
+</button>
+
+</div>
+
+</section>
+
+
+<!-- SHIPMENT -->
+
+<section id="ship" class="page">
+
+<div class="card">
+
+<h3>🚚 Бор №</h3>
+
+<select id="sr"
+onchange="shipForm()">
+</select>
+
+<div id="shipItems"></div>
+
+<button class="btn red"
+onclick="shipment()">
+🚚 Сабти бор
+</button>
+
+</div>
+
+<div class="card"
+id="shipOut"></div>
+
+</section>
+
+
+<!-- RETURN -->
+
+<section id="ret" class="page">
+
+<div class="card">
+
+<h3>🔄 Баргардонидан</h3>
+
+<select id="rr"
+onchange="returnForm()">
+</select>
+
+<div id="retItems"></div>
+
+<button class="btn red"
+onclick="ret()">
+🔄 Баргардон
+</button>
+
+</div>
+
+<div class="card"
+id="retOut"></div>
+
+</section>
+
+
+<!-- PAYMENT -->
+
+<section id="pay" class="page">
+
+<div class="card">
+
+<h3>💰 Пардохт</h3>
+
+<select id="pr"></select>
+
+<input id="pamt"
+type="number"
+placeholder="Маблағ">
+
+<input id="pnote"
+placeholder="Шарҳ">
+
+<button class="btn red"
+onclick="payment()">
+💰 Сабт
+</button>
+
+</div>
+
+<div class="card"
+id="payOut"></div>
+
+</section>
+
+
+<!-- RECEIPT -->
+
+<section id="receipt" class="page">
+
+<div class="card">
+
+<h3>🧾 Receipt</h3>
+
+<select id="receiptR"
+onchange="receipt()">
+</select>
+
+<div id="receiptOut"></div>
+
+<button class="btn red"
+onclick="printR()">
+🖨️ Print
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ANALYTICS -->
+
+<section id="analytics" class="page">
+
+<div class="card">
+
+<h3>📊 Analytics</h3>
+
+<div id="analyticsOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- PROFIT -->
+
+<section id="profit" class="page">
+
+<div class="card">
+
+<h3>📈 Profit Center</h3>
+
+<div id="profitOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- FORECAST -->
+
+<section id="forecast" class="page">
+
+<div class="card">
+
+<h3>📦 Forecast</h3>
+
+<div id="forecastOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- DEBT -->
+
+<section id="debt" class="page">
+
+<div class="card">
+
+<h3>💳 Intelligent Debt</h3>
+
+<div id="debtOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- PROBLEM -->
+
+<section id="problem" class="page">
+
+<div class="card">
+
+<h3>🚨 Problem Center</h3>
+
+<div id="problemOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- SMART -->
+
+<section id="smart" class="page">
+
+<div class="card">
+
+<h3>🧠 Smart / AI</h3>
+
+<textarea
+id="sq"
+placeholder="Масалан: кадом мол кам аст?">
+</textarea>
+
+<button class="btn red"
+onclick="smart()">
+🧠 Ҷавоб
+</button>
+
+<div id="smartOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- CALENDAR -->
+
+<section id="calendar" class="page">
+
+<div class="card">
+
+<h3>📅 Calendar + Notifications</h3>
+
+<input
+id="cal"
+type="date"
+onchange="calendar()">
+
+<div id="calOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- MATERIAL -->
+
+<section id="material" class="page">
+
+<div class="card">
+
+<h3>🧮 Масолеҳ</h3>
+
+<div class="form">
+
+<div>
+
+<label>Масоҳат м²</label>
+
+<input
+id="ma"
+type="number">
+
+</div>
+
+<div>
+
+<label>Баландӣ м</label>
+
+<input
+id="mh"
+type="number">
+
+</div>
+
+</div>
+
+<button class="btn red"
+onclick="material()">
+🧮 Ҳисоб
+</button>
+
+<div id="matOut"></div>
+
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section id="settings" class="page">
+
+<div class="card">
+
+<h3>⚙️ Танзимот</h3>
+
+<input
+id="sys"
+value="Rental Pro">
+
+<button class="btn red"
+onclick="saveSettings()">
+💾 Сабт
+</button>
+
+<button class="btn"
+onclick="backup()">
+⬇️ Backup
+</button>
+
+<button class="btn"
+onclick="wipe()">
+🗑️ Тоза кардан
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+<div class="modal"
+id="modal">
+
+<div>
+
+<button class="x"
+onclick="document.getElementById('modal').classList.remove('show')">
+✕
+</button>
+
+<div id="modalBody"></div>
+
+</div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
